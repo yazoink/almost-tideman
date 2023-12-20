@@ -4,8 +4,7 @@
 #include <stdint.h>
 #include <inttypes.h>
 
-#define MAX 9
-#define MAX_STR 30
+#define MAX_CANDIDATES 9
 
 typedef struct {
     char *name;
@@ -27,7 +26,7 @@ main(int argc, char* argv[]) {
         printf("Usage: ./tideman <candidates>\n");
         return 1;
     }
-    if (argc > MAX + 1) {
+    if (argc > MAX_CANDIDATES + 1) {
         printf("Error: the maximum number of candidates is 9.\n");
         return 1;
     }
@@ -99,13 +98,16 @@ vote_valid(const char *str, const vote_t *candidates, const uint_fast8_t candida
 void
 take_votes(vote_t* candidates, const uint_fast8_t candidate_i) {
     for (uint_fast8_t i = 0; i < candidate_i; ++i) {
-        char str[MAX_STR];
         uint_fast8_t valid = 0;
         while (!valid) {
+            char *str = NULL;
             printf("Rank %" PRIuFAST8 ": ", i + 1);
-            scanf("%[^\n]s", str);
+            if (!scanf("%ms", &str)) {
+                continue;
+            }
             while (getchar() != '\n');
             valid = vote_valid(str, candidates, candidate_i);
+            free(str);
         }
         candidates[i].score = candidates[i].score + valid;
     }
