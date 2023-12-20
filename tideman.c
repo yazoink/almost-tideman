@@ -80,7 +80,7 @@ uint8_t
 vote_valid(const char *str, const vote_t *candidates, const uint8_t candidate_num) {
     for (size_t i = 0; i < candidate_num; ++i) {
         if (strcmp(candidates[i].name, str) == 0) {
-            return i + 1;
+            return candidate_num - i;
         }
     }
     return 0;
